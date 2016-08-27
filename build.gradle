@@ -1,0 +1,98 @@
+apply plugin: 'java'
+apply plugin: 'groovy'
+apply plugin: 'idea'
+apply plugin: 'eclipse'
+apply plugin: 'com.github.johnrengelman.shadow'
+apply plugin: 'application'
+
+mainClassName = 'com.rp.Wave'
+ext {
+  junitVersion      = '4.11'
+  h2oProjectVersion = "$h2oMajorVersion.$h2oBuild"
+}
+
+buildscript {
+    repositories {
+        mavenCentral()
+        jcenter()
+    }
+    dependencies {
+        classpath 'com.github.jengelman.gradle.plugins:shadow:1.2.3'  // useful for making uberjar
+    }
+}
+
+repositories {
+    if (h2oBuild == '99999') mavenLocal()
+    mavenCentral()
+}
+
+dependencies {
+    compile "ai.h2o:h2o-core:${h2oProjectVersion}"
+    // Define dependency on H2O algorithm
+    compile "ai.h2o:h2o-algos:${h2oProjectVersion}"
+    // Contains H2O entry points
+    compile "ai.h2o:h2o-app:${h2oProjectVersion}"
+    // Groovy
+    compile 'org.codehaus.groovy:groovy-all:2.4.5'
+    // to json
+    compile 'com.fasterxml.jackson.core:jackson-databind:2.7.2'
+    compile 'com.fasterxml.jackson.module:jackson-module-jsonSchema:2.7.1'
+    testCompile 'junit:junit:4.11'
+}
+
+
+// uncomment for test printout
+//test {
+//    afterTest { desc, result ->
+//        println "Executing test ${desc.name} [${desc.className}] with result: ${result.resultType}"
+//    }
+//    testLogging.showStandardStreams = true
+//}
+
+// Setup group ID for this project
+group = "com.rp"
+
+sourceCompatibility = 1.8
+targetCompatibility = 1.8
+compileJava { 
+    options.debug = true 
+}
+
+task wrapper(type: Wrapper) {
+    gradleVersion = '2.13'
+}
+
+
+shadowJar {
+    mergeServiceFiles()
+    classifier = ''
+    exclude 'META-INF/*.DSA'
+    exclude 'META-INF/*.SF'
+    exclude 'synchronize.properties'
+    exclude 'uploader.properties'
+    exclude 'test.properties'
+    exclude 'cockpitlite.properties'
+    exclude 'devpay_products.properties'
+    manifest {
+        attributes 'Main-Class': 'com.rp.Wave'
+    }
+}
+
+artifacts {
+    archives shadowJar
+}
+
+def assembly = "wave-0.1.0-SNAPSHOT.jar"
+def allInOne = "wave.jar"
+
+task copyJar(type: Copy) {
+    from ("build/libs"){
+        include assembly
+    }
+    into "build"
+    rename { it.replace(assembly, allInOne) }
+}
+// Execute always copyJar
+shadowJar.finalizedBy copyJar
+// Run shadowJar as par of build
+jar.finalizedBy shadowJar
