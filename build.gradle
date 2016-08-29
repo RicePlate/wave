@@ -34,6 +34,8 @@ dependencies {
     compile "ai.h2o:h2o-app:${h2oProjectVersion}"
     // Groovy
     compile 'org.codehaus.groovy:groovy-all:2.4.5'
+    compile 'org.fusesource.jansi:jansi:1.11'
+    compile 'jline:jline:2.13'
     // to json
     compile 'com.fasterxml.jackson.core:jackson-databind:2.7.2'
     compile 'com.fasterxml.jackson.module:jackson-module-jsonSchema:2.7.1'
