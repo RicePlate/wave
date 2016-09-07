@@ -23,20 +23,4 @@ class TestExtendMRTask extends TestUtil {
         TEST_SHELL.execute("println 1000 == new A().doAll(v).s")
         TEST_SHELL.execute("v.remove()")
     }
-
-
-//    class A extends MRTask {
-//        double s=0
-//        void map(Chunk c) {
-//            for(int i=0;i<c._len;++i) {
-//                s += 2
-//            }
-//        }
-//        void reduce(MRTask t) {
-//            println "hola from node: "
-//            println H2O.SELF.index()
-//            s += t.s
-//        }
-//    }
-
 }
