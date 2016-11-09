@@ -24,14 +24,18 @@ buildscript {
 repositories {
     if (h2oBuild == '99999') mavenLocal()
     mavenCentral()
+    maven {
+        url "http://h2o-release.s3.amazonaws.com/h2o/master/3682/maven/repo/"
+    }
 }
 
 dependencies {
-    compile "ai.h2o:h2o-core:${h2oProjectVersion}"
-    // Define dependency on H2O algorithm
     compile "ai.h2o:h2o-algos:${h2oProjectVersion}"
-    // Contains H2O entry points
     compile "ai.h2o:h2o-app:${h2oProjectVersion}"
+    compile "ai.h2o:h2o-core:${h2oProjectVersion}"
+    compile "ai.h2o:h2o-genmodel:${h2oProjectVersion}"
+//    compile "ai.h2o:h2o-persist-hdfs:${h2oProjectVersion}"
+    compile "ai.h2o:h2o-web:${h2oProjectVersion}"
     // Groovy
     compile 'org.codehaus.groovy:groovy-all:2.4.5'
     compile 'org.fusesource.jansi:jansi:1.11'

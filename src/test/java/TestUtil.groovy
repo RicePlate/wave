@@ -12,4 +12,5 @@ public class TestUtil {
         CompilerConfiguration.DEFAULT.setBytecodePostprocessor(new Wave.ByteCodePostLoad());
         TEST_SHELL=new Groovysh()
     }
+    public static void launchShell() { launchShell(new String[0]); }
 }

@@ -3,7 +3,7 @@ import org.junit.Test
 
 class TestExtendMRTask extends TestUtil {
 
-    @BeforeClass public static void init() { launchShell(new String[0]); }
+    @BeforeClass public static void init() { launchShell(); }
 
     @Test public void testNewTask() {
         TEST_SHELL.execute("import water.MRTask");
