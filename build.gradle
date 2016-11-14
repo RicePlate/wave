@@ -33,6 +33,14 @@ repositories {
     }
 }
 
+sourceSets {
+    main {
+        resources {
+            srcDirs = ['src/main/java', 'web']
+        }
+    }
+}
+
 dependencies {
     compile "ai.h2o:h2o-algos:${h2oProjectVersion}"
     compile "ai.h2o:h2o-app:${h2oProjectVersion}"

@@ -36,7 +36,6 @@ public class WaveJetty extends JettyHTTPD {
     context.addServlet(DatasetServlet.class, "/3/DownloadDataset.bin");
     context.addServlet(RequestServer.class, "/");
 
-
     HandlerCollection hc = new HandlerCollection();
     hc.setHandlers(new Handler[]{new JettyHTTPD.GateHandler(), new JettyHTTPD.AuthenticationHandler(), new JettyHTTPD.ExtensionHandler1(), context});
     handlerWrapper.setHandler(hc);
