@@ -13,14 +13,6 @@ ext {
   h2oProjectVersion = "$h2oMajorVersion.$h2oBuild"
 }
 
-sourceSets {
-    main {
-        resources {
-            srcDirs = ['src/main/java', 'web/www']
-        }
-    }
-}
-
 def getOsSpecificCommandLine(args) { return Os.isFamily(Os.FAMILY_WINDOWS) ? ['cmd', '/c' ] + args : args }
 
 buildscript {
