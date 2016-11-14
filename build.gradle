@@ -1,3 +1,5 @@
+import org.apache.tools.ant.taskdefs.condition.Os
+
 apply plugin: 'java'
 apply plugin: 'groovy'
 apply plugin: 'idea'
@@ -10,6 +12,16 @@ ext {
   junitVersion      = '4.11'
   h2oProjectVersion = "$h2oMajorVersion.$h2oBuild"
 }
+
+sourceSets {
+    main {
+        resources {
+            srcDirs = ['src/main/java', 'web/www']
+        }
+    }
+}
+
+def getOsSpecificCommandLine(args) { return Os.isFamily(Os.FAMILY_WINDOWS) ? ['cmd', '/c' ] + args : args }
 
 buildscript {
     repositories {
@@ -68,6 +80,20 @@ task wrapper(type: Wrapper) {
     gradleVersion = '2.13'
 }
 
+task buildElm << {
+    ProcessBuilder builder = new ProcessBuilder(Arrays.asList('elm', "make",
+            'WebSocketExample.elm',
+            '--output=../../../web/www/wave/index.html',
+            '--warn'
+    ))
+    builder.directory(new File("src/main/elm"));
+    builder.redirectErrorStream(true)
+    //builder.directory(new File('/home/tony/git-projects/guru-api/src/main/elm/'))
+    Process process = builder.start()
+    BufferedReader reader = new BufferedReader(new InputStreamReader(process.getInputStream()));
+    String line = null;
+    while( (line = reader.readLine())!=null ) System.out.println(line);
+}
 
 shadowJar {
     mergeServiceFiles()
@@ -82,7 +108,15 @@ shadowJar {
     manifest {
         attributes 'Main-Class': 'com.rp.Wave'
     }
+    append 'web/www'
 }
+
+task cleanElm(type: Exec) {
+    commandLine getOsSpecificCommandLine(["rm", "src/main/elm/index.html"])
+    commandLine getOsSpecificCommandLine(["rm", "web/www/wave/index.html"])
+}
+
+clean.dependsOn cleanElm
 
 artifacts {
     archives shadowJar
@@ -102,3 +136,5 @@ task copyJar(type: Copy) {
 shadowJar.finalizedBy copyJar
 // Run shadowJar as par of build
 jar.finalizedBy shadowJar
+
+build.dependsOn buildElm
