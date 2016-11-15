@@ -30,3 +30,8 @@ private/
 .project
 .settings/
 build/*
+
+
+# elm stuff
+*elm-stuff/
+web/www/wave/index.html
